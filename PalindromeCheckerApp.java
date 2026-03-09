@@ -1,81 +1,72 @@
 import java.util.Stack;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 /**
  * ==============================================================
- * INTERFACE - PalindromeStrategy
+ * MAIN CLASS - UseCase13PalindromeCheckerApp
  * ==============================================================
- * This interface defines a contract for all palindrome checking algorithms.
+ * * Use Case 13: Performance Comparison
+ * * Description:
+ * This class benchmarks different palindrome checking algorithms
+ * by capturing their execution time in nanoseconds.
  */
-interface PalindromeStrategy {
-    boolean check(String input);
-}
+public class PalindromeCheckerApp {
 
-/**
- * CLASS - StackStrategy
- * Uses LIFO behavior to reverse characters and compare them.
- */
-class StackStrategy implements PalindromeStrategy {
-    @Override
-    public boolean check(String input) {
-        // Create a stack to store characters
+    /**
+     * Application entry point for UC13.
+     * @param args Command-line arguments
+     */
+    public static void main(String[] args) {
+        String input = "level";
+        
+        System.out.println("Input : " + input);
+
+        // --- Approach 1: Pointer-Based (Iterative) ---
+        long startIterative = System.nanoTime();
+        boolean isPalIterative = checkIterative(input);
+        long endIterative = System.nanoTime();
+        long timeIterative = endIterative - startIterative;
+
+        // --- Approach 2: Stack-Based ---
+        long startStack = System.nanoTime();
+        boolean isPalStack = checkStack(input);
+        long endStack = System.nanoTime();
+        long timeStack = endStack - startStack;
+
+        // Display results as per the required output format
+        System.out.println("Is Palindrome? : " + isPalIterative);
+        System.out.println("Execution Time (Iterative): " + timeIterative + " ns");
+        System.out.println("Execution Time (Stack-Based): " + timeStack + " ns");
+    }
+
+    /**
+     * Pointer-based approach (High performance, low memory)
+     */
+    public static boolean checkIterative(String input) {
+        int start = 0;
+        int end = input.length() - 1;
+        while (start < end) {
+            if (input.charAt(start) != input.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+
+    /**
+     * Stack-based approach (Higher memory overhead)
+     */
+    public static boolean checkStack(String input) {
         Stack<Character> stack = new Stack<>();
-
-        // Push each character of the input string onto the stack
         for (char c : input.toCharArray()) {
             stack.push(c);
         }
-
-        // Compare characters by popping from the stack
         for (char c : input.toCharArray()) {
             if (c != stack.pop()) {
                 return false;
             }
         }
         return true;
-    }
-}
-
-/**
- * CLASS - DequeStrategy
- * Uses Deque to compare front and rear elements simultaneously.
- */
-class DequeStrategy implements PalindromeStrategy {
-    @Override
-    public boolean check(String input) {
-        Deque<Character> deque = new ArrayDeque<>();
-        for (char c : input.toCharArray()) {
-            deque.addLast(c);
-        }
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                return false;
-            }
-        }
-        return true;
-    }
-}
-
-/**
- * ==============================================================
- * MAIN CLASS - UseCase12PalindromeCheckerApp
- * ==============================================================
- */
-public class PalindromeCheckerApp {
-    public static void main(String[] args) {
-        String testInput = "madam";
-        
-        // Inject Strategy at runtime
-        PalindromeStrategy strategy = new StackStrategy();
-        
-        System.out.println("Using Stack Strategy:");
-        System.out.println("Input: " + testInput + " | Result: " + strategy.check(testInput));
-        
-        // Dynamically switch strategy
-        strategy = new DequeStrategy();
-        
-        System.out.println("\nUsing Deque Strategy (Switched at runtime):");
-        System.out.println("Input: " + testInput + " | Result: " + strategy.check(testInput));
     }
 }
