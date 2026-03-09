@@ -1,41 +1,59 @@
 /**
  * ==============================================================
- * MAIN CLASS - UseCase9RecursivePalindrome
+ * MAIN CLASS - UseCase11PalindromeCheckerApp
  * ==============================================================
+ * * Use Case 11: Object-Oriented Palindrome Service
+ * * Description:
+ * This class serves as the entry point, delegating logic to the
+ * PalindromeService class.
  */
 public class PalindromeCheckerApp {
 
+    /**
+     * Application entry point for UC11.
+     * @param args Command-line arguments
+     */
     public static void main(String[] args) {
-        // Step 1: Define and Normalize the input string
-        // (Recursive checks are usually done on pre-processed strings)
-        String original = "A man a plan a canal Panama";
-        String normalized = original.replaceAll("[^a-zA-Z]", "").toLowerCase();
-        
-        // Step 2: Call the recursive method
-        boolean isPalindrome = isPalindromeRecursive(normalized);
+        // Define the input string
+        String input = "radar";
 
-        // Step 3: Output the results
-        System.out.println("Input String  : " + original);
-        System.out.println("Normalized    : " + normalized);
-        System.out.println("Is Palindrome?: " + isPalindrome);
+        // Create an instance of the service class (Encapsulation)
+        PalindromeService service = new PalindromeService();
+
+        // Call the service method
+        boolean isPalindrome = service.checkPalindrome(input);
+
+        // Display results
+        System.out.println("Input String: " + input);
+        System.out.println("Is Palindrome? : " + isPalindrome);
     }
+}
+
+/**
+ * Service class that contains palindrome logic.
+ */
+class PalindromeService {
 
     /**
-     * Recursive helper method to validate palindrome logic.
+     * Checks whether the input string is a palindrome.
+     * Uses the pointer-based approach for optimization.
+     * @param input Input string
+     * @return true if palindrome, false otherwise
      */
-    public static boolean isPalindromeRecursive(String str) {
-        // Base Case 1: If string length is 0 or 1, it is a palindrome
-        if (str.length() <= 1) {
-            return true;
+    public boolean checkPalindrome(String input) {
+        // Initialize pointers
+        int start = 0;
+        int end = input.length() - 1;
+
+        // Compare characters moving inward
+        while (start < end) {
+            if (input.charAt(start) != input.charAt(end)) {
+                return false; // Mismatch found
+            }
+            start++; // Move forward
+            end--;   // Move backward
         }
 
-        // Base Case 2: If first and last characters don't match, it's NOT a palindrome
-        if (str.charAt(0) != str.charAt(str.length() - 1)) {
-            return false;
-        }
-
-        // Recursive Step: Call the method again with the inner substring
-        // substring(1, str.length() - 1) removes the first and last characters
-        return isPalindromeRecursive(str.substring(1, str.length() - 1));
+        return true; // No mismatches found
     }
 }
