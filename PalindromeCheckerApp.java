@@ -1,43 +1,41 @@
-
 /**
  * ==============================================================
  * MAIN CLASS - UseCase9RecursivePalindrome
  * ==============================================================
- * * Use Case 9: Recursive Palindrome Checker
- * * Description:
- * This class validates a palindrome using recursion.
- * * Characters are compared from the outer positions
- * moving inward using recursive calls.
- * * The recursion stops when:
- * - All characters are matched, or
- * - A mismatch is found.
- * * This use case demonstrates divide-and-conquer
- * logic using method recursion.
- * * @author Developer
- * @version 9.0
  */
-import java.util.LinkedList;
 public class PalindromeCheckerApp {
 
-    /**
-     * Application entry point for UC9.
-     * * @param args Command-line arguments
-     */
     public static void main(String[] args) {
-        String input = "level";
-        LinkedList<Character> list = new LinkedList<>();
-        for(char c: input.toCharArray()){
-            list.add(c);
-        }
-        boolean isPalindrome = true;
-        while(list.size()>1){
-            if(list.removeFirst() != list.removeLast()){
-                isPalindrome = false;
-                break;
-            }
-        }
-        System.out.println("Input : "+input);
-        System.out.println("Is Palindrome? : "+isPalindrome);
+        // Step 1: Define and Normalize the input string
+        // (Recursive checks are usually done on pre-processed strings)
+        String original = "A man a plan a canal Panama";
+        String normalized = original.replaceAll("[^a-zA-Z]", "").toLowerCase();
+        
+        // Step 2: Call the recursive method
+        boolean isPalindrome = isPalindromeRecursive(normalized);
 
+        // Step 3: Output the results
+        System.out.println("Input String  : " + original);
+        System.out.println("Normalized    : " + normalized);
+        System.out.println("Is Palindrome?: " + isPalindrome);
+    }
+
+    /**
+     * Recursive helper method to validate palindrome logic.
+     */
+    public static boolean isPalindromeRecursive(String str) {
+        // Base Case 1: If string length is 0 or 1, it is a palindrome
+        if (str.length() <= 1) {
+            return true;
+        }
+
+        // Base Case 2: If first and last characters don't match, it's NOT a palindrome
+        if (str.charAt(0) != str.charAt(str.length() - 1)) {
+            return false;
+        }
+
+        // Recursive Step: Call the method again with the inner substring
+        // substring(1, str.length() - 1) removes the first and last characters
+        return isPalindromeRecursive(str.substring(1, str.length() - 1));
     }
 }
