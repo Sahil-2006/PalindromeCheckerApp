@@ -1,59 +1,81 @@
+import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 /**
  * ==============================================================
- * MAIN CLASS - UseCase11PalindromeCheckerApp
+ * INTERFACE - PalindromeStrategy
  * ==============================================================
- * * Use Case 11: Object-Oriented Palindrome Service
- * * Description:
- * This class serves as the entry point, delegating logic to the
- * PalindromeService class.
+ * This interface defines a contract for all palindrome checking algorithms.
  */
-public class PalindromeCheckerApp {
+interface PalindromeStrategy {
+    boolean check(String input);
+}
 
-    /**
-     * Application entry point for UC11.
-     * @param args Command-line arguments
-     */
-    public static void main(String[] args) {
-        // Define the input string
-        String input = "radar";
+/**
+ * CLASS - StackStrategy
+ * Uses LIFO behavior to reverse characters and compare them.
+ */
+class StackStrategy implements PalindromeStrategy {
+    @Override
+    public boolean check(String input) {
+        // Create a stack to store characters
+        Stack<Character> stack = new Stack<>();
 
-        // Create an instance of the service class (Encapsulation)
-        PalindromeService service = new PalindromeService();
+        // Push each character of the input string onto the stack
+        for (char c : input.toCharArray()) {
+            stack.push(c);
+        }
 
-        // Call the service method
-        boolean isPalindrome = service.checkPalindrome(input);
-
-        // Display results
-        System.out.println("Input String: " + input);
-        System.out.println("Is Palindrome? : " + isPalindrome);
+        // Compare characters by popping from the stack
+        for (char c : input.toCharArray()) {
+            if (c != stack.pop()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
 /**
- * Service class that contains palindrome logic.
+ * CLASS - DequeStrategy
+ * Uses Deque to compare front and rear elements simultaneously.
  */
-class PalindromeService {
-
-    /**
-     * Checks whether the input string is a palindrome.
-     * Uses the pointer-based approach for optimization.
-     * @param input Input string
-     * @return true if palindrome, false otherwise
-     */
-    public boolean checkPalindrome(String input) {
-        // Initialize pointers
-        int start = 0;
-        int end = input.length() - 1;
-
-        // Compare characters moving inward
-        while (start < end) {
-            if (input.charAt(start) != input.charAt(end)) {
-                return false; // Mismatch found
-            }
-            start++; // Move forward
-            end--;   // Move backward
+class DequeStrategy implements PalindromeStrategy {
+    @Override
+    public boolean check(String input) {
+        Deque<Character> deque = new ArrayDeque<>();
+        for (char c : input.toCharArray()) {
+            deque.addLast(c);
         }
+        while (deque.size() > 1) {
+            if (deque.removeFirst() != deque.removeLast()) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
 
-        return true; // No mismatches found
+/**
+ * ==============================================================
+ * MAIN CLASS - UseCase12PalindromeCheckerApp
+ * ==============================================================
+ */
+public class PalindromeCheckerApp {
+    public static void main(String[] args) {
+        String testInput = "madam";
+        
+        // Inject Strategy at runtime
+        PalindromeStrategy strategy = new StackStrategy();
+        
+        System.out.println("Using Stack Strategy:");
+        System.out.println("Input: " + testInput + " | Result: " + strategy.check(testInput));
+        
+        // Dynamically switch strategy
+        strategy = new DequeStrategy();
+        
+        System.out.println("\nUsing Deque Strategy (Switched at runtime):");
+        System.out.println("Input: " + testInput + " | Result: " + strategy.check(testInput));
     }
 }
