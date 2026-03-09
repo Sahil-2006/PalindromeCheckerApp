@@ -1,4 +1,3 @@
-import java.util.Scanner;
 
 /**
  * ==============================================================
@@ -17,6 +16,7 @@ import java.util.Scanner;
  * * @author Developer
  * @version 9.0
  */
+import java.util.LinkedList;
 public class PalindromeCheckerApp {
 
     /**
@@ -24,48 +24,20 @@ public class PalindromeCheckerApp {
      * * @param args Command-line arguments
      */
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Input : ");
-        String input = scanner.nextLine();
-
-        // Standardize input: remove non-alphanumeric and convert to lowercase
-        String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-
-        boolean isPalindrome = false;
-        
-        // Handle empty string case or proceed to recursion
-        if (cleanInput.isEmpty()) {
-            isPalindrome = true;
-        } else {
-            isPalindrome = check(cleanInput, 0, cleanInput.length() - 1);
+        String input = "level";
+        LinkedList<Character> list = new LinkedList<>();
+        for(char c: input.toCharArray()){
+            list.add(c);
         }
-
-        System.out.println("Is Palindrome? : " + isPalindrome);
-        
-        scanner.close();
-    }
-
-    /**
-     * Recursively checks whether a string is palindrome.
-     * Uses the Call Stack to manage subproblems.
-     * * @param s      Input string
-     * @param start  Starting index
-     * @param end    Ending index
-     * @return true if palindrome, otherwise false
-     */
-    private static boolean check(String s, int start, int end) {
-        // Base Condition: If indices cross or meet, all characters matched
-        if (start >= end) {
-            return true;
+        boolean isPalindrome = true;
+        while(list.size()>1){
+            if(list.removeFirst() != list.removeLast()){
+                isPalindrome = false;
+                break;
+            }
         }
+        System.out.println("Input : "+input);
+        System.out.println("Is Palindrome? : "+isPalindrome);
 
-        // Check if characters at current boundaries match
-        if (s.charAt(start) != s.charAt(end)) {
-            return false; // Mismatch found, terminates recursion
-        }
-
-        // Recursive call: move indices inward
-        return check(s, start + 1, end - 1);
     }
 }
